@@ -89,6 +89,9 @@ contract P2P {
         seller.balance += price * amount;
 
         // Reward the buyer and seller
+        // In simple words, all the prosumers
+        // are incentivized which to ensure
+        // engagement in the platform.
         buyer.reward += (price * amount) / 1000;
         seller.reward += (price * amount) / 200;
 
