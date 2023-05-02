@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity <=0.8.19;
+pragma solidity 0.8.19;
 
 contract P2P {
     struct Prosumer {
@@ -27,7 +27,7 @@ contract P2P {
     event EnergyWithdrawn(address indexed sender, uint amount);
     event Deposited(address indexed sender, uint amount);
 
-    uint256 private price;
+    uint256 private price = 1;
     uint256 public contractBalance;
 
     function setPrice(uint256 newPrice) public {
