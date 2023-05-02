@@ -1,4 +1,4 @@
-# Blockchain-P2P-Energy-Trading
+# Blockchain-P2P-Energy-Trading ⚡
 
 The incentive mechanism in the P2P contract is designed to encourage prosumers to participate in the energy trading market. It works by rewarding prosumers with a small percentage of the purchase price for each unit of energy they buy, and a larger percentage of the sale price for each unit of energy they sell. The rewards are calculated using a formula that takes into account the following factors:
 
