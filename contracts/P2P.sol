@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity <=0.8.19;
 
 contract P2P {
     struct Prosumer {
@@ -32,7 +32,7 @@ contract P2P {
     event EnergyWithdrawn(address indexed sender, uint amount);
     event Deposited(address indexed sender, uint amount);
 
-    uint256 private price = 1;
+    uint256 private price = 1 gwei;
     uint256 public contractBalance;
 
     function setPrice(uint256 newPrice) public {
@@ -89,16 +89,14 @@ contract P2P {
         seller.balance += price * amount;
 
         // Reward the buyer and seller
-        // In simple words, all the prosumers
-        // are incentivized which to ensure
-        // engagement in the platform.
+
         buyer.reward += (price * amount) / 1000;
         seller.reward += (price * amount) / 200;
 
         emit EnergyTraded(msg.sender, seller.id, amount, price);
     }
 
-    function sellEnergy(uint amount) public {
+    function sellEnergy(uint amount) public payable {
         require(amount > 0);
 
         Prosumer storage seller = prosumers[msg.sender];
@@ -131,10 +129,12 @@ contract P2P {
     function deposit() public payable {
         require(msg.value > 0);
         contractBalance += msg.value;
+        Prosumer storage newProsumer = prosumers[msg.sender];
+        newProsumer.balance = contractBalance;
         emit Deposited(msg.sender, msg.value);
     }
 
-    function withdraw() public {
+    function withdraw() public payable {
         require(getEnergyStatus(msg.sender) >= 0);
 
         address payable sender = payable(msg.sender);

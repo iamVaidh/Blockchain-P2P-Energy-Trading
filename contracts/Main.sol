@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity <=0.8.19;
 
 import "./P2P.sol";
 
@@ -36,8 +36,8 @@ contract Main {
         return p2pContract.getBalance(prosumer) >= amount;
     }
 
-    function registerProsumer() public onlyOnce {
-        p2pContract.registerProsumer("Test Name", 0);
+    function registerProsumer(string memory _name, uint _energyStatus) public onlyOnce {
+        p2pContract.registerProsumer(_name, _energyStatus);
     }
 
     function depositEthers() public payable onlyRegistered {
@@ -47,7 +47,7 @@ contract Main {
     function sendEnergyRequest(
         uint amount,
         bool isBuyer
-    ) public onlyRegistered hasSufficientBalanceModifier(amount) {
+    ) public payable onlyRegistered hasSufficientBalanceModifier(amount) {
         if (isBuyer) {
             p2pContract.buyEnergy(amount);
         } else {
