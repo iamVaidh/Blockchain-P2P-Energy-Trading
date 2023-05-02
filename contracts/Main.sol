@@ -49,7 +49,7 @@ contract Main {
         bool isBuyer
     ) public payable onlyRegistered hasSufficientBalanceModifier(amount) {
         if (isBuyer) {
-            p2pContract.buyEnergy(amount);
+            p2pContract.buyEnergy{value: msg.value}(amount);
         } else {
             p2pContract.sellEnergy(amount);
         }
@@ -63,7 +63,7 @@ contract Main {
         return p2pContract.getBalance(prosumer);
     } 
 
-    function withdrawEthers() public onlyRegistered {
+    function withdrawEthers() public payable onlyRegistered {
         require(getEnergyStatus(msg.sender) >= 0);
         p2pContract.withdraw();
     }
