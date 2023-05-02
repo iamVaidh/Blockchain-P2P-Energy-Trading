@@ -10,7 +10,7 @@ The incentive mechanism is implemented using a smart contract on the Ethereum bl
 
 The incentive mechanism is designed to be fair and equitable to all participants in the energy trading market. It is also designed to be sustainable, so that the market can continue to operate in the long term.
 
-In simple terms, the moto of incentive mechanism is to encourage user engagement.
+In simple terms, the moto of incentive mechanism is to encourage (maximum) user engagement.
 
 Below is the image that contains the table of the various tests done though the code's is little broken. 🧶
 
