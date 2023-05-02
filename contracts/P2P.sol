@@ -8,9 +8,14 @@ contract P2P {
         uint energyStatus;
         uint balance;
         uint reward;
+        bool isSeller;
+        bool isBuyer;
     }
 
     mapping(address => Prosumer) prosumers;
+
+    address[] public sellers;
+    address[] public buyers;
 
     event ProsumerRegistered(
         address indexed prosumer,
@@ -46,6 +51,16 @@ contract P2P {
         newProsumer.balance = 0;
         newProsumer.reward = 0;
 
+        if (energyStatus > 0) {
+            // Prosumer is a seller
+            newProsumer.isSeller = true;
+            sellers.push(msg.sender);
+        } else {
+            // Prosumer is a buyer
+            newProsumer.isBuyer = true;
+            buyers.push(msg.sender);
+        }
+
         emit ProsumerRegistered(
             msg.sender,
             name,
@@ -59,10 +74,13 @@ contract P2P {
         require(amount > 0);
 
         Prosumer storage buyer = prosumers[msg.sender];
+        require(buyer.isBuyer == true);
         require(buyer.energyStatus >= amount);
         require(buyer.balance >= price * amount);
 
-        Prosumer storage seller = prosumers[buyer.id];
+        address payable sellerAddress = getBestSeller(amount);
+        Prosumer storage seller = prosumers[sellerAddress];
+        require(seller.isSeller == true);
         require(seller.energyStatus >= amount);
 
         buyer.energyStatus -= amount;
@@ -81,6 +99,7 @@ contract P2P {
         require(amount > 0);
 
         Prosumer storage seller = prosumers[msg.sender];
+        require(seller.isSeller == true);
         require(seller.energyStatus >= amount);
 
         seller.energyStatus -= amount;
@@ -130,5 +149,24 @@ contract P2P {
         prosumers[msg.sender].energyStatus -= amount;
 
         emit EnergyWithdrawn(msg.sender, amount);
+    }
+
+    function getBestSeller(uint amount) private view returns (address payable) {
+        address payable bestSeller;
+        uint256 lowestPrice = type(uint256).max;
+
+        for (uint256 i = 0; i < sellers.length; i++) {
+            Prosumer storage seller = prosumers[sellers[i]];
+            if (seller.energyStatus >= amount && seller.balance < lowestPrice) {
+                bestSeller = payable(sellers[i]);
+                lowestPrice = seller.balance;
+            }
+        }
+
+        require(
+            bestSeller != address(0),
+            "No sellers available for the requested amount"
+        );
+        return bestSeller;
     }
 }
