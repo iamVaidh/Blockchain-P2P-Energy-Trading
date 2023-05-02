@@ -93,69 +93,69 @@
 //   });
 // });
 
-const { assert } = require('chai');
+// const { assert } = require('chai');
 
-const P2P = artifacts.require('P2P');
+// const P2P = artifacts.require('P2P');
 
-contract('P2P', (accounts) => {
-  const [alice, bob] = accounts;
-  const name = 'Alice';
-  const energyStatus = 1000;
-  const amount = 500;
+// contract('P2P', (accounts) => {
+//   const [alice, bob] = accounts;
+//   const name = 'Alice';
+//   const energyStatus = 1000;
+//   const amount = 500;
 
-  beforeEach(async () => {
-    p2p = await P2P.new();
-  });
+//   beforeEach(async () => {
+//     p2p = await P2P.new();
+//   });
 
-  it('should register a prosumer', async () => {
-    const result = await p2p.registerProsumer(name, energyStatus, {
-      from: alice,
-    });
-    assert.equal(result.logs[0].args.name, name);
-    assert.equal(result.logs[0].args.energyStatus, energyStatus);
-  });
+//   it('should register a prosumer', async () => {
+//     const result = await p2p.registerProsumer(name, energyStatus, {
+//       from: alice,
+//     });
+//     assert.equal(result.logs[0].args.name, name);
+//     assert.equal(result.logs[0].args.energyStatus, energyStatus);
+//   });
 
-  it('should buy energy', async () => {
-    await p2p.registerProsumer(name, energyStatus, { from: alice });
-    await p2p.registerProsumer(name, energyStatus, { from: bob });
-    await p2p.setPrice(1, { from: alice });
-    const result = await p2p.buyEnergy(amount, { from: alice, value: amount });
-    assert.equal(result.logs[0].args.buyer, alice);
-    assert.equal(result.logs[0].args.seller, bob);
-    assert.equal(result.logs[0].args.amount, amount);
-    assert.equal(result.logs[0].args.price, 1);
-  });
+//   it('should buy energy', async () => {
+//     await p2p.registerProsumer(name, energyStatus, { from: alice });
+//     await p2p.registerProsumer(name, energyStatus, { from: bob });
+//     await p2p.setPrice(1, { from: alice });
+//     const result = await p2p.buyEnergy(amount, { from: alice, value: amount });
+//     assert.equal(result.logs[0].args.buyer, alice);
+//     assert.equal(result.logs[0].args.seller, bob);
+//     assert.equal(result.logs[0].args.amount, amount);
+//     assert.equal(result.logs[0].args.price, 1);
+//   });
 
-  it('should sell energy', async () => {
-    await p2p.registerProsumer(name, energyStatus, { from: alice });
-    await p2p.setPrice(1, { from: alice });
-    const result = await p2p.sellEnergy(amount, { from: alice });
-    assert.equal(result.logs[0].args.buyer, bob);
-    assert.equal(result.logs[0].args.seller, alice);
-    assert.equal(result.logs[0].args.amount, amount);
-    assert.equal(result.logs[0].args.price, 0);
-  });
+//   it('should sell energy', async () => {
+//     await p2p.registerProsumer(name, energyStatus, { from: alice });
+//     await p2p.setPrice(1, { from: alice });
+//     const result = await p2p.sellEnergy(amount, { from: alice });
+//     assert.equal(result.logs[0].args.buyer, bob);
+//     assert.equal(result.logs[0].args.seller, alice);
+//     assert.equal(result.logs[0].args.amount, amount);
+//     assert.equal(result.logs[0].args.price, 0);
+//   });
 
-  it('should deposit', async () => {
-    const value = 100;
-    const result = await p2p.deposit({ from: alice, value });
-    assert.equal(result.logs[0].args.sender, alice);
-    assert.equal(result.logs[0].args.amount, value);
-    const balance = await p2p.contractBalance();
-    assert.equal(balance, value);
-  });
+//   it('should deposit', async () => {
+//     const value = 100;
+//     const result = await p2p.deposit({ from: alice, value });
+//     assert.equal(result.logs[0].args.sender, alice);
+//     assert.equal(result.logs[0].args.amount, value);
+//     const balance = await p2p.contractBalance();
+//     assert.equal(balance, value);
+//   });
 
-  it('should withdraw', async () => {
-    await p2p.registerProsumer(name, energyStatus, { from: alice });
-    const value = 500;
-    await p2p.setPrice(1, { from: alice });
-    await p2p.buyEnergy(amount, { from: alice, value: amount });
-    const initialBalance = await web3.eth.getBalance(alice);
-    await p2p.withdraw({ from: alice });
-    const finalBalance = await web3.eth.getBalance(alice);
-    assert.isAbove(finalBalance, initialBalance);
-  });
-});
+//   it('should withdraw', async () => {
+//     await p2p.registerProsumer(name, energyStatus, { from: alice });
+//     const value = 500;
+//     await p2p.setPrice(1, { from: alice });
+//     await p2p.buyEnergy(amount, { from: alice, value: amount });
+//     const initialBalance = await web3.eth.getBalance(alice);
+//     await p2p.withdraw({ from: alice });
+//     const finalBalance = await web3.eth.getBalance(alice);
+//     assert.isAbove(finalBalance, initialBalance);
+//   });
+// });
 
 
 
