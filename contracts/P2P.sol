@@ -28,6 +28,7 @@ contract P2P {
     event Deposited(address indexed sender, uint amount);
 
     uint256 private price;
+    uint256 public contractBalance;
 
     function setPrice(uint256 newPrice) public {
         require(newPrice > 0);
@@ -70,8 +71,8 @@ contract P2P {
         seller.balance += price * amount;
 
         // Reward the buyer and seller
-        buyer.reward += (price * amount) / 100;
-        seller.reward += (price * amount) / 100;
+        buyer.reward += (price * amount) / 1000;
+        seller.reward += (price * amount) / 200;
 
         emit EnergyTraded(msg.sender, seller.id, amount, price);
     }
@@ -84,7 +85,7 @@ contract P2P {
 
         seller.energyStatus -= amount;
         seller.balance += price * amount;
-        seller.reward += (price * amount) / 100;
+        seller.reward += (price * amount) / 200;
 
         emit EnergyTraded(seller.id, msg.sender, amount, 0);
     }
@@ -107,13 +108,9 @@ contract P2P {
 
     function deposit() public payable {
         require(msg.value > 0);
-
         contractBalance += msg.value;
-
         emit Deposited(msg.sender, msg.value);
     }
-
-    uint256 public contractBalance;
 
     function withdraw() public {
         require(getEnergyStatus(msg.sender) >= 0);
