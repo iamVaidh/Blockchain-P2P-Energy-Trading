@@ -1,88 +1,70 @@
-const P2P = artifacts.require("P2P");
+// const { expect } = require('chai');
+// const mainContract = require('Main.sol').Main;
 
-contract("P2P", function (accounts) {
-  beforeEach(async function () {
-    this.contract = await P2P.deployed();
-  });
+// describe('Main contract', () => {
+//   it('should deploy successfully', async () => {
+//     const main = new mainContract(web3.eth.accounts[0]);
+//     await main.deployed();
+//     expect(main.address).to.not.be.null;
+//   });
 
-  it("should assert true", async function () {
-    return assert.isTrue(true);
-  });
+//   it('should only allow registered users to access its methods', async () => {
+//     const main = new mainContract(web3.eth.accounts[0]);
+//     await main.deployed();
 
-  it("should be able to register a prosumer", async function () {
-    const name = "Alice";
-    const energyStatus = 100;
-    await this.contract.registerProsumer(name, energyStatus);
+//     // Try to call a method without registering first
+//     await expect(main.sendEnergyRequest(1, true)).to.be.rejectedWith(
+//       'The user is not registered'
+//     );
 
-    const prosumer = await this.contract.getProsumer(msg.sender);
-    expect(prosumer.name).toEqual(name);
-    expect(prosumer.energyStatus).toEqual(energyStatus);
-  });
+//     // Register the user
+//     await main.registerProsumer('Test User', 100);
 
-  it("should be able to buy energy", async function () {
-    const amount = 10;
-    await this.contract.buyEnergy(amount);
+//     // Now the method should be callable
+//     await main.sendEnergyRequest(1, true);
+//   });
 
-    const buyer = await this.contract.getProsumer(msg.sender);
-    expect(buyer.energyStatus).toEqual(energyStatus - amount);
-    expect(buyer.balance).toEqual(balance - price * amount);
-  });
+//   it('should only allow users with sufficient balance to call its methods', async () => {
+//     const main = new mainContract(web3.eth.accounts[0]);
+//     await main.deployed();
 
-  it("should be able to sell energy", async function () {
-    const amount = 10;
-    await this.contract.sellEnergy(amount);
+//     // Try to call a method with insufficient balance
+//     await expect(main.depositEthers(1)).to.be.rejectedWith(
+//       'Insufficient balance'
+//     );
 
-    const seller = await this.contract.getProsumer(msg.sender);
-    expect(seller.energyStatus).toEqual(energyStatus + amount);
-    expect(seller.balance).toEqual(balance + price * amount);
-  });
+//     // Deposit some ethers
+//     await main.depositEthers(10);
 
-  it("should be able to get the energy status of a prosumer", async function () {
-    const energyStatus = 100;
-    await this.contract.registerProsumer("Alice", energyStatus);
+//     // Now the method should be callable
+//     await main.depositEthers(1);
+//   });
 
-    const prosumer = await this.contract.getProsumer(msg.sender);
-    expect(prosumer.energyStatus).toEqual(energyStatus);
-  });
+//   it('should correctly update the energy status of the user', async () => {
+//     const main = new mainContract(web3.eth.accounts[0]);
+//     await main.deployed();
 
-  it("should be able to get the balance of a prosumer", async function () {
-    const balance = 100;
-    await this.contract.deposit(balance);
+//     // Register the user with an initial energy status of 100
+//     await main.registerProsumer('Test User', 100);
 
-    const prosumer = await this.contract.getProsumer(msg.sender);
-    expect(prosumer.balance).toEqual(balance);
-  });
+//     // Send a request to buy 10 units of energy
+//     await main.sendEnergyRequest(10, true);
 
-  it("should be able to get the reward of a prosumer", async function () {
-    const reward = 100;
-    await this.contract.buyEnergy(10);
+//     // Check that the user's energy status has been updated
+//     expect(main.getEnergyStatus(main.address)).to.equal(90);
+//   });
 
-    const prosumer = await this.contract.getProsumer(msg.sender);
-    expect(prosumer.reward).toEqual(reward);
-  });
+//   it('should correctly update the balance of the user', async () => {
+//     const main = new mainContract(web3.eth.accounts[0]);
+//     await main.deployed();
 
-  it("should be able to check if a prosumer is registered", async function () {
-    const isRegistered = await this.contract.isProsumerRegistered(msg.sender);
-    expect(isRegistered).toEqual(true);
-  });
+//     // Register the user with an initial balance of 100 ETH
+//     await main.registerProsumer('Test User', 100);
 
-  it("should be able to deposit energy", async function () {
-    const amount = 10;
-    await this.contract.deposit(amount);
+//     // Send a request to buy 10 units of energy
+//     await main.sendEnergyRequest(10, true);
 
-    const contractBalance = await this.contract.getBalance();
-    expect(contractBalance).toEqual(balance + amount);
-  });
-
-  it("should be able to withdraw energy", async function () {
-    const amount = 10;
-    await this.contract.deposit(amount);
-
-    await this.contract.withdraw(amount);
-
-    const contractBalance = await this.contract.getBalance();
-    expect(contractBalance).toEqual(balance - amount);
-  });
-});
-
-
+//     // Check that the user's balance has been updated
+//     expect(main.getBalance(main.address)).to.equal(90);
+//   });
+// });

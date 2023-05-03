@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "chai": "^4.3.7"
   }
 }
