@@ -172,6 +172,4 @@ contract P2P {
 
         emit EnergyWithdrawn(msg.sender, amount);
     }
-
-    
 }
