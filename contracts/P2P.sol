@@ -69,6 +69,29 @@ contract P2P {
         );
     }
 
+    function isProsumerRegistered(address prosumer) public view returns (bool) {
+        return bytes(prosumers[prosumer].name).length > 0;
+    }
+
+    function getBestSeller(uint amount) private view returns (address payable) {
+        address payable bestSeller;
+        uint256 lowestPrice = type(uint256).max;
+
+        for (uint256 i = 0; i < sellers.length; i++) {
+            Prosumer storage seller = prosumers[sellers[i]];
+            if (seller.energyStatus >= amount && seller.balance < lowestPrice) {
+                bestSeller = payable(sellers[i]);
+                lowestPrice = seller.balance;
+            }
+        }
+
+        require(
+            bestSeller != address(0),
+            "No sellers available for the requested amount"
+        );
+        return bestSeller;
+    }
+
     function buyEnergy(uint amount) public payable {
         require(price > 0);
         require(amount > 0);
@@ -122,10 +145,6 @@ contract P2P {
         return prosumers[prosumer].reward;
     }
 
-    function isProsumerRegistered(address prosumer) public view returns (bool) {
-        return bytes(prosumers[prosumer].name).length > 0;
-    }
-
     function deposit() public payable {
         require(msg.value > 0);
         contractBalance += msg.value;
@@ -154,22 +173,5 @@ contract P2P {
         emit EnergyWithdrawn(msg.sender, amount);
     }
 
-    function getBestSeller(uint amount) private view returns (address payable) {
-        address payable bestSeller;
-        uint256 lowestPrice = type(uint256).max;
-
-        for (uint256 i = 0; i < sellers.length; i++) {
-            Prosumer storage seller = prosumers[sellers[i]];
-            if (seller.energyStatus >= amount && seller.balance < lowestPrice) {
-                bestSeller = payable(sellers[i]);
-                lowestPrice = seller.balance;
-            }
-        }
-
-        require(
-            bestSeller != address(0),
-            "No sellers available for the requested amount"
-        );
-        return bestSeller;
-    }
+    
 }
